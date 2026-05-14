@@ -1,0 +1,7 @@
+{
+  "name": "WalkAlert",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
