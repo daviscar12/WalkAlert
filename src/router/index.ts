@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
-import HomePage from '../views/HomePage.vue'
+import HomePage from '../views/HomePage.vue';
+import MapPage from '../views/MapPage.vue';
+import SettingsPage from '../views/SettingsPage.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -11,12 +13,22 @@ const routes: Array<RouteRecordRaw> = [
     path: '/home',
     name: 'Home',
     component: HomePage
+  },
+  {
+    path: '/map',
+    name: 'Map',
+    component: MapPage
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: SettingsPage
   }
-]
+];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes
-})
+});
 
-export default router
+export default router;
