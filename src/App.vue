@@ -2,10 +2,6 @@
   <ion-app class="app-shell" :class="themeClass">
     <ion-header translucent>
       <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-back-button default-href="/home"></ion-back-button>
-        </ion-buttons>
-
         <ion-title>WalkAlert</ion-title>
 
         <ion-buttons slot="end">
@@ -18,7 +14,7 @@
 
     <ion-router-outlet />
 
-    <ion-footer translucent class="bottom-nav">
+    <ion-footer v-if="showFooter" translucent class="bottom-nav">
       <ion-toolbar>
         <ion-grid>
           <ion-row class="nav-row">
@@ -49,9 +45,9 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import { useRoute } from 'vue-router';
 import {
   IonApp,
-  IonBackButton,
   IonButton,
   IonButtons,
   IonFooter,
@@ -67,6 +63,12 @@ import {
 import { moon, sunny } from 'ionicons/icons';
 
 const theme = ref<'light' | 'dark'>('light');
+const route = useRoute();
+const showFooter = computed(() => {
+  const hiddenNames = ['Login', 'Register', 'ProfileInfo'];
+  const routeName = route.name as string | undefined;
+  return !hiddenNames.includes(routeName ?? '') && route.path !== '/profile-info';
+});
 
 const toggleTheme = () => {
   theme.value = theme.value === 'light' ? 'dark' : 'light';
@@ -86,13 +88,23 @@ const themeClass = computed(() => (theme.value === 'dark' ? 'dark-theme' : 'ligh
 ion-header,
 ion-toolbar,
 ion-footer {
-  background: var(--app-surface);
-  backdrop-filter: blur(18px);
+  background: #000000;
+  color: var(--ion-color-primary);
+  backdrop-filter: none;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 ion-toolbar {
   border-radius: 0;
+}
+
+ion-header ion-title,
+ion-header ion-button,
+ion-footer ion-button,
+.nav-button,
+.nav-button span,
+.nav-button .material-symbols-outlined {
+  color: var(--ion-color-primary) !important;
 }
 
 ion-router-outlet {

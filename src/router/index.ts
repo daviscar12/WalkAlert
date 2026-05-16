@@ -3,11 +3,14 @@ import { RouteRecordRaw } from 'vue-router';
 import HomePage from '../views/HomePage.vue';
 import MapPage from '../views/MapPage.vue';
 import SettingsPage from '../views/SettingsPage.vue';
+import LoginPage from '../views/LoginPage.vue';
+import RegisterPage from '../views/RegisterPage.vue';
+import ProfileInfoPage from '../views/ProfileInfoPage.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/home'
+    redirect: '/register'
   },
   {
     path: '/home',
@@ -18,6 +21,21 @@ const routes: Array<RouteRecordRaw> = [
     path: '/map',
     name: 'Map',
     component: MapPage
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: LoginPage
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: RegisterPage
+  },
+  {
+    path: '/profile-info',
+    name: 'ProfileInfo',
+    component: ProfileInfoPage
   },
   {
     path: '/settings',

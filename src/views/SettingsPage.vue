@@ -27,13 +27,23 @@
         </ion-item>
 
         <ion-item>
+          <ion-label position="stacked">Nome do parente</ion-label>
+          <ion-input v-model="form.relativeName" placeholder="Nome do pai, mãe ou responsável"></ion-input>
+        </ion-item>
+
+        <ion-item>
           <ion-label position="stacked">Contato de emergência</ion-label>
-          <ion-input type="tel" v-model="form.emergencyContact" placeholder="Telefone do familiar"></ion-input>
+          <ion-input type="tel" v-model="form.relativeContact" placeholder="Telefone do parente"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label position="stacked">E-mail</ion-label>
           <ion-input type="email" v-model="form.email" placeholder="email@exemplo.com"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Alergia</ion-label>
+          <ion-toggle slot="end" v-model="form.allergy"></ion-toggle>
         </ion-item>
 
         <ion-item>
@@ -50,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue';
+import { onMounted, reactive } from 'vue';
 import {
   IonBackButton,
   IonButton,
@@ -63,21 +73,47 @@ import {
   IonPage,
   IonTextarea,
   IonTitle,
-  IonToolbar
+  IonToolbar,
+  IonToggle
 } from '@ionic/vue';
 
+const PROFILE_KEY = 'walkalert-profile';
 const form = reactive({
   name: '',
   phone: '',
-  emergencyContact: '',
+  relativeName: '',
+  relativeContact: '',
   email: '',
+  allergy: false,
   notes: ''
 });
 
+const loadProfile = () => {
+  try {
+    const stored = localStorage.getItem(PROFILE_KEY);
+    if (stored) {
+      const profile = JSON.parse(stored);
+      form.name = profile.name || '';
+      form.phone = profile.phone || '';
+      form.relativeName = profile.relativeName || '';
+      form.relativeContact = profile.relativeContact || '';
+      form.email = profile.email || '';
+      form.allergy = !!profile.allergy;
+      form.notes = profile.notes || '';
+    }
+  } catch {
+    // ignore
+  }
+};
+
 function saveSettings() {
-  // Aqui você pode salvar no armazenamento local ou enviar ao backend.
-  console.log('Dados salvos', { ...form });
+  localStorage.setItem(PROFILE_KEY, JSON.stringify({ ...form }));
+  alert('Perfil salvo com sucesso.');
 }
+
+onMounted(() => {
+  loadProfile();
+});
 </script>
 
 <style scoped>
@@ -86,6 +122,7 @@ function saveSettings() {
   flex-direction: column;
   gap: 18px;
   min-height: calc(100vh - 94px);
+  padding-bottom: calc(100px + env(safe-area-inset-bottom));
 }
 
 .settings-intro {
@@ -110,8 +147,9 @@ function saveSettings() {
   box-shadow: var(--app-shadow);
 }
 
-.settings-page ion-button {
+..settings-page ion-button {
   margin-top: 8px;
+  margin-bottom: 18px;
   border-radius: 16px;
 }
 </style>
