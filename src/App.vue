@@ -88,17 +88,21 @@ const themeClass = computed(() => (theme.value === 'dark' ? 'dark-theme' : 'ligh
 ion-header,
 ion-toolbar,
 ion-footer {
-  background: #000000;
-  color: var(--ion-color-primary);
+  --background: var(--app-surface);
+  background: var(--app-surface);
+  color: var(--ion-text-color);
   backdrop-filter: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--app-border);
 }
 
 ion-toolbar {
   border-radius: 0;
 }
 
-ion-header ion-title,
+ion-header ion-title {
+  color: var(--ion-text-color) !important;
+}
+
 ion-header ion-button,
 ion-footer ion-button,
 .nav-button,

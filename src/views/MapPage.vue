@@ -104,6 +104,11 @@
         Traçar rota
       </ion-button>
 
+      <ion-button expand="block" color="secondary" class="route-button" router-link="/share-route">
+        <span class="material-symbols-outlined">share_location</span>
+        Compartilhar rota
+      </ion-button>
+
       <ion-card class="status-card">
         <ion-card-header>
           <ion-card-title>Status da rota</ion-card-title>

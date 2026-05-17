@@ -13,52 +13,119 @@
 
         <ion-item>
           <ion-label position="stacked">Nome</ion-label>
-          <ion-input v-model="name" placeholder="Seu nome" />
+          <ion-input
+            :value="name"
+            @ionInput="onNameInput"
+            placeholder="Seu nome"
+          />
         </ion-item>
 
         <ion-item>
           <ion-label position="stacked">Email</ion-label>
-          <ion-input v-model="email" type="email" placeholder="seu@exemplo.com" />
+          <ion-input
+            :value="email"
+            @ionInput="onEmailInput"
+            type="email"
+            placeholder="seu@exemplo.com"
+          />
         </ion-item>
 
         <ion-item>
           <ion-label position="stacked">Senha</ion-label>
-          <ion-input v-model="password" type="password" placeholder="Senha" />
+          <ion-input
+            :value="password"
+            @ionInput="onPasswordInput"
+            type="password"
+            placeholder="Senha"
+          />
         </ion-item>
 
-        <ion-button expand="block" color="success" @click="register">Criar conta</ion-button>
-        <ion-button expand="block" fill="clear" @click="goToLogin">Já tenho conta</ion-button>
+        <ion-button expand="block" color="success" @click="register">
+          Criar conta
+        </ion-button>
+
+        <ion-button expand="block" fill="clear" @click="goToLogin">
+          Já tenho conta
+        </ion-button>
       </div>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-const router = useRouter();
-const name = ref('');
-const email = ref('');
-const password = ref('');
+import {
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonItem,
+  IonLabel,
+  IonInput,
+  IonButton
+} from '@ionic/vue'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-const register = () => {
-  const userName = name.value.trim() || 'Usuário';
-  const userEmail = email.value.trim() || 'email@exemplo.com';
-  const userPassword = password.value.trim() || 'senha';
+import { auth, db } from '@/firebase'
 
-  const usersRaw = localStorage.getItem('walkalert-users');
-  const users = usersRaw ? JSON.parse(usersRaw) : [];
-  users.push({ id: Date.now(), name: userName, email: userEmail });
-  localStorage.setItem('walkalert-users', JSON.stringify(users));
+import { createUserWithEmailAndPassword } from 'firebase/auth'
 
-  localStorage.setItem('walkalert-current-user', JSON.stringify({ name: userName, email: userEmail }));
-  localStorage.setItem('walkalert-user-password', userPassword);
-  router.push('/profile-info');
-};
+import { doc, setDoc } from 'firebase/firestore'
+
+const router = useRouter()
+
+const name = ref('')
+const email = ref('')
+const password = ref('')
+
+const onNameInput = (event: any) => {
+  name.value = event.detail.value
+}
+
+const onEmailInput = (event: any) => {
+  email.value = event.detail.value
+}
+
+const onPasswordInput = (event: any) => {
+  password.value = event.detail.value
+}
+
+const register = async () => {
+
+  try {
+
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email.value,
+      password.value
+    )
+
+    alert('USUÁRIO CRIADO COM SUCESSO')
+
+    const user = userCredential.user
+
+    await setDoc(doc(db, 'users', user.uid), {
+      name: name.value,
+      email: email.value,
+      createdAt: new Date()
+    })
+
+    
+
+    router.push('/login')
+
+  } catch (error: any) {
+
+    console.log(error)
+
+    alert(error.message)
+  }
+}
 
 const goToLogin = () => {
-  router.push('/login');
-};
+  router.push('/login')
+}
 </script>
 
 <style scoped>
@@ -74,9 +141,9 @@ const goToLogin = () => {
   margin: 0 auto;
   padding: 28px 24px;
   border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 26px 68px rgba(26, 87, 41, 0.1);
+  border: 1px solid var(--app-border);
+  background: var(--app-surface);
+  box-shadow: 0 26px 68px rgba(0, 0, 0, 0.16);
   backdrop-filter: blur(16px);
 }
 
@@ -94,8 +161,15 @@ const goToLogin = () => {
 ion-item {
   border-radius: 18px;
   margin-bottom: 14px;
-  --background: rgba(247, 249, 251, 0.95);
+  --background: var(--app-surface);
   border: 1px solid var(--app-border);
+}
+
+ion-item,
+ion-input,
+ion-label,
+.auth-card p {
+  color: var(--ion-text-color);
 }
 
 ion-button {

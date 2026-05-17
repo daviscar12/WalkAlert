@@ -13,36 +13,106 @@
 
         <ion-item>
           <ion-label position="stacked">Email</ion-label>
-          <ion-input v-model="email" type="email" placeholder="seu@exemplo.com" />
+          <ion-input
+            v-model="email"
+            type="email"
+            placeholder="seu@exemplo.com"
+          />
         </ion-item>
 
         <ion-item>
           <ion-label position="stacked">Senha</ion-label>
-          <ion-input v-model="password" type="password" placeholder="Senha" />
+          <ion-input
+            v-model="password"
+            type="password"
+            placeholder="Senha"
+          />
         </ion-item>
 
-        <ion-button expand="block" color="success" @click="login">Continuar</ion-button>
-        <ion-button expand="block" fill="clear" @click="goToRegister">Criar conta</ion-button>
+        <ion-button expand="block" color="success" @click="login">
+          Continuar
+        </ion-button>
+
+        <ion-button expand="block" fill="clear" @click="goToRegister">
+          Criar conta
+        </ion-button>
       </div>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-const router = useRouter();
-const email = ref('');
-const password = ref('');
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-const login = () => {
-  localStorage.setItem('walkalert-current-user', JSON.stringify({ email: email.value.trim() || 'usuario@exemplo.com' }));
-  router.push('/profile-info');
-};
+import {
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonItem,
+  IonLabel,
+  IonInput,
+  IonButton
+} from '@ionic/vue'
+
+import { auth } from '@/firebase'
+
+import { signInWithEmailAndPassword } from 'firebase/auth'
+
+const router = useRouter()
+
+const email = ref('')
+const password = ref('')
+
+const login = async () => {
+
+  try {
+
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email.value,
+      password.value
+    )
+
+    const user = userCredential.user
+
+    console.log('Usuário logado:', user)
+
+    alert('Login realizado com sucesso!')
+
+    router.push('/profile-info')
+
+  } catch (error: any) {
+
+    console.log(error)
+
+    if (error.code === 'auth/invalid-email') {
+      alert('Email inválido!')
+    }
+
+    else if (error.code === 'auth/user-not-found') {
+      alert('Usuário não encontrado!')
+    }
+
+    else if (error.code === 'auth/wrong-password') {
+      alert('Senha incorreta!')
+    }
+
+    else if (error.code === 'auth/invalid-credential') {
+      alert('Email ou senha incorretos!')
+    }
+
+    else {
+      alert(error.message)
+    }
+  }
+}
 
 const goToRegister = () => {
-  router.push('/register');
-};
+  router.push('/register')
+}
 </script>
 
 <style scoped>
@@ -58,9 +128,9 @@ const goToRegister = () => {
   margin: 0 auto;
   padding: 28px 24px;
   border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 26px 68px rgba(26, 87, 41, 0.1);
+  border: 1px solid var(--app-border);
+  background: var(--app-surface);
+  box-shadow: 0 26px 68px rgba(0, 0, 0, 0.16);
   backdrop-filter: blur(16px);
 }
 
@@ -78,8 +148,15 @@ const goToRegister = () => {
 ion-item {
   border-radius: 18px;
   margin-bottom: 14px;
-  --background: rgba(247, 249, 251, 0.95);
+  --background: var(--app-surface);
   border: 1px solid var(--app-border);
+}
+
+ion-item,
+ion-input,
+ion-label,
+.auth-card p {
+  color: var(--ion-text-color);
 }
 
 ion-button {

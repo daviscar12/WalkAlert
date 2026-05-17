@@ -27,6 +27,7 @@
           <div class="quick-grid">
             <ion-button expand="block" class="quick-button primary" @click="startNewRoute">Iniciar rota</ion-button>
             <ion-button expand="block" class="quick-button secondary" router-link="/map">Abrir mapa</ion-button>
+            <ion-button expand="block" class="quick-button secondary" router-link="/share-route">Compartilhar rota</ion-button>
             <ion-button expand="block" class="quick-button warning" router-link="/settings">Configurações</ion-button>
           </div>
         </ion-card-content>

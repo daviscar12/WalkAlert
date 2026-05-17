@@ -6,6 +6,7 @@ import SettingsPage from '../views/SettingsPage.vue';
 import LoginPage from '../views/LoginPage.vue';
 import RegisterPage from '../views/RegisterPage.vue';
 import ProfileInfoPage from '../views/ProfileInfoPage.vue';
+import ShareRoutePage from '../views/ShareRoutePage.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -41,6 +42,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/settings',
     name: 'Settings',
     component: SettingsPage
+  },
+  {
+    path: '/share-route',
+    name: 'ShareRoute',
+    component: ShareRoutePage
   }
 ];
 
